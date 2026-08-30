@@ -1,0 +1,11 @@
+{
+    "assistant": {
+        "name": "Gideon",
+        "language": "ru",
+        "max_context_messages": 50
+    },
+    "ai": {
+        "provider": "openai",
+        "model": "gpt-5.6-luna"
+    }
+}

@@ -1,0 +1,19 @@
+from enum import Enum
+
+
+class EventType(Enum):
+    """
+    Типы событий Gideon.
+    """
+
+    SYSTEM_STARTED = "SYSTEM_STARTED"
+    SYSTEM_STOPPED = "SYSTEM_STOPPED"
+
+    COMMAND_RECEIVED = "COMMAND_RECEIVED"
+
+    VOICE_INPUT = "VOICE_INPUT"
+    TEXT_INPUT = "TEXT_INPUT"
+
+    TOOL_STARTED = "TOOL_STARTED"
+    TOOL_FINISHED = "TOOL_FINISHED"
+    TOOL_FAILED = "TOOL_FAILED"
