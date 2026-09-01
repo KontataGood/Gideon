@@ -4,6 +4,8 @@ from gideon.ai.context import ContextManager
 
 class Agent:
 
+    MAX_TOOL_CALLS = 5
+
     def __init__(
         self,
         ai,
@@ -27,7 +29,19 @@ class Agent:
             tools=tools,
         )
 
-        if isinstance(response, ToolCall):
+        tool_calls = 0
+
+        while isinstance(response, ToolCall):
+
+            if tool_calls >= self.MAX_TOOL_CALLS:
+                return "Превышено максимальное количество вызовов инструментов."
+
+            tool_calls += 1
+
+            self._context.add_tool_call(
+                response.tool_name,
+                response.arguments,
+            )
 
             result = self._tool_executor.execute(
                 response.tool_name,
@@ -39,10 +53,11 @@ class Agent:
                 result,
             )
 
-            return str(result)
+            response = self._ai.chat(
+                messages=self._context.get_messages(),
+                tools=tools,
+            )
 
-        self._context.add_assistant_message(
-            response
-        )
+        self._context.add_assistant_message(response)
 
         return response

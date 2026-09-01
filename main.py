@@ -1,30 +1,42 @@
-from gideon.core.assistant import Gideon
 from dotenv import load_dotenv
 
-load_dotenv()
+from gideon.core.assistant import Gideon
+
 
 def main():
+    load_dotenv()
+
     gideon = Gideon()
+    gideon.start()
 
-    print(
-        "Name:",
-        gideon.config.get("assistant.name")
-    )
+    print()
+    print("Type 'exit' or 'quit' to stop.")
+    print()
 
-    print(
-        "Language:",
-        gideon.config.get("assistant.language")
-    )
+    while gideon.running:
+        try:
+            user_input = input("You: ").strip()
 
-    print(
-        "Provider:",
-        gideon.config.get("ai.provider")
-    )
+            if not user_input:
+                continue
 
-    print(
-        "Model:",
-        gideon.config.get("ai.model")
-    )
+            if user_input.lower() in {"exit", "quit"}:
+                break
+
+            response = gideon.agent.process(user_input)
+
+            print(f"Gideon: {response}")
+            print()
+
+        except KeyboardInterrupt:
+            print("\n")
+
+            break
+
+        except Exception as e:
+            print(f"Error: {e}")
+
+    gideon.stop()
 
 
 if __name__ == "__main__":

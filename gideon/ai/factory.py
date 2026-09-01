@@ -1,29 +1,22 @@
-import os
-
 from gideon.ai.client import AIClient
-from gideon.ai.mock_client import MockAIClient
+from gideon.ai.ollama_client import OllamaClient
 from gideon.ai.openai_client import OpenAIClient
 
 
 class AIFactory:
-    """
-    Создаёт AI-клиент Gideon.
-    """
-
     @staticmethod
     def create_client(
-        provider: str = "mock",
-        model: str = "test",
+        provider: str,
+        model: str,
+        api_key: str | None = None,
     ) -> AIClient:
 
-        if provider == "mock":
-            return MockAIClient()
+        provider = provider.lower()
+
+        if provider == "ollama":
+            return OllamaClient(model=model)
 
         if provider == "openai":
-            api_key = os.getenv(
-                "GIDEON_AI_API_KEY"
-            )
-
             if not api_key:
                 raise RuntimeError(
                     "GIDEON_AI_API_KEY is not configured."
@@ -35,5 +28,5 @@ class AIFactory:
             )
 
         raise ValueError(
-            f"Unknown AI provider: {provider}"
+            f"Unsupported AI provider: {provider}"
         )

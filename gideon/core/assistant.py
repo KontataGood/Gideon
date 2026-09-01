@@ -21,10 +21,6 @@ class Gideon:
         voice=None,
         config=None,
     ):
-        self.ai = AIManager(
-            AIFactory.create_client()
-        )
-
         self.memory = memory
         self.voice = voice
         self.config = config or ConfigManager(

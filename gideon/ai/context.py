@@ -7,6 +7,8 @@ class ContextManager:
     """
 
     def __init__(self, system_prompt: str):
+        self._system_prompt = system_prompt
+
         self._messages: list[dict[str, Any]] = [
             {
                 "role": "system",
@@ -34,6 +36,27 @@ class ContextManager:
             }
         )
 
+    def add_tool_call(
+        self,
+        tool_name: str,
+        arguments: dict[str, Any],
+    ):
+        """Добавляет вызов инструмента."""
+
+        self._messages.append(
+            {
+                "role": "assistant",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": tool_name,
+                            "arguments": arguments,
+                        }
+                    }
+                ],
+            }
+        )
+
     def add_tool_result(
         self,
         tool_name: str,
@@ -57,8 +80,9 @@ class ContextManager:
     def clear(self):
         """Очищает историю, сохраняя system prompt."""
 
-        system_message = self._messages[0]
-
         self._messages = [
-            system_message
+            {
+                "role": "system",
+                "content": self._system_prompt,
+            }
         ]
