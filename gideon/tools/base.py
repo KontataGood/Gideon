@@ -5,7 +5,11 @@ from typing import Any
 class Tool(ABC):
     """
     Базовый интерфейс инструмента Gideon.
+
+    Этот интерфейс считается частью API Gideon.
     """
+
+    API_VERSION = 1
 
     @property
     @abstractmethod
@@ -16,29 +20,14 @@ class Tool(ABC):
     @property
     @abstractmethod
     def description(self) -> str:
-        """Описание инструмента."""
+        """Описание инструмента для AI."""
         raise NotImplementedError
 
     @property
+    @abstractmethod
     def parameters(self) -> dict[str, Any]:
-        """
-        Описание параметров инструмента.
-
-        Формат предназначен для передачи AI.
-        """
-
-        return {}
-
-    def schema(self) -> dict[str, Any]:
-        """
-        Возвращает полную схему инструмента.
-        """
-
-        return {
-            "name": self.name,
-            "description": self.description,
-            "parameters": self.parameters,
-        }
+        """JSON Schema параметров инструмента."""
+        raise NotImplementedError
 
     @abstractmethod
     def execute(self, **kwargs: Any) -> Any:
