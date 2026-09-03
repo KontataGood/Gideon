@@ -37,11 +37,11 @@ class ContextManager:
         )
 
     def add_tool_call(
-        self,
-        tool_name: str,
-        arguments: dict[str, Any],
+            self,
+            tool_name: str,
+            arguments: dict[str, Any],
     ):
-        """Добавляет вызов инструмента."""
+        """Добавляет запрос ассистента на выполнение инструмента."""
 
         self._messages.append(
             {

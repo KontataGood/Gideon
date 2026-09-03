@@ -8,6 +8,7 @@ from gideon.ai.manager import AIManager
 from gideon.core.agent import Agent
 from gideon.ai.context import ContextManager
 from gideon.config.manager import ConfigManager
+from gideon.platforms.factory import PlatformFactory
 
 class Gideon:
     """
@@ -26,6 +27,8 @@ class Gideon:
         self.config = config or ConfigManager(
             "config/config.json"
         )
+
+        self.platform = PlatformFactory.create()
 
         provider = self.config.get(
             "ai.provider",
@@ -46,6 +49,13 @@ class Gideon:
 
         self.event_bus = EventBus()
         self.tools = ToolRegistry()
+
+        from gideon.tools.builtin.calculator import CalculatorTool
+
+        self.tools.register(
+            CalculatorTool()
+        )
+
 
         self.tool_executor = ToolExecutor(
             registry=self.tools,

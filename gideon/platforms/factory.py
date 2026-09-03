@@ -1,24 +1,25 @@
-import platform
+import platform as system_platform
 
 from gideon.platforms.base import Platform
-from gideon.platforms.windows.platform import WindowsPlatform
 from gideon.platforms.macos.platform import MacOSPlatform
+from gideon.platforms.windows.platform import WindowsPlatform
 
 
-def create_platform() -> Platform:
+class PlatformFactory:
     """
-    Создаёт реализацию платформы
-    для текущей операционной системы.
+    Создаёт реализацию Platform для текущей ОС.
     """
 
-    system = platform.system()
+    @staticmethod
+    def create() -> Platform:
+        current_os = system_platform.system()
 
-    if system == "Windows":
-        return WindowsPlatform()
+        if current_os == "Windows":
+            return WindowsPlatform()
 
-    if system == "Darwin":
-        return MacOSPlatform()
+        if current_os == "Darwin":
+            return MacOSPlatform()
 
-    raise RuntimeError(
-        f"Unsupported platform: {system}"
-    )
+        raise RuntimeError(
+            f"Unsupported operating system: {current_os}"
+        )

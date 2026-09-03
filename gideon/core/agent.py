@@ -22,21 +22,21 @@ class Agent:
 
         self._context.add_user_message(text)
 
-        tools = self._tool_registry.get_schemas()
+        max_tool_calls = 5
 
-        response = self._ai.chat(
-            messages=self._context.get_messages(),
-            tools=tools,
-        )
+        for _ in range(max_tool_calls):
 
-        tool_calls = 0
+            tools = self._tool_registry.get_schemas()
 
-        while isinstance(response, ToolCall):
+            response = self._ai.chat(
+                messages=self._context.get_messages(),
+                tools=tools,
+            )
 
-            if tool_calls >= self.MAX_TOOL_CALLS:
-                return "Превышено максимальное количество вызовов инструментов."
+            if not isinstance(response, ToolCall):
+                self._context.add_assistant_message(response)
 
-            tool_calls += 1
+                return response
 
             self._context.add_tool_call(
                 response.tool_name,
@@ -53,11 +53,6 @@ class Agent:
                 result,
             )
 
-            response = self._ai.chat(
-                messages=self._context.get_messages(),
-                tools=tools,
-            )
-
-        self._context.add_assistant_message(response)
-
-        return response
+        raise RuntimeError(
+            "Maximum number of tool calls exceeded."
+        )
