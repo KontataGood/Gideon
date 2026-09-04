@@ -29,3 +29,9 @@ class WindowsPlatform(Platform):
             capture_output=True,
             text=True,
         )
+
+    def open_url(self, url: str) -> None:
+        subprocess.Popen(
+            ["cmd", "/c", "start", "", url],
+            shell=True,
+        )

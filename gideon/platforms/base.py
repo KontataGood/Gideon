@@ -20,3 +20,8 @@ class Platform(ABC):
     def stop_process(self, process: str) -> None:
         """Останавливает процесс."""
         raise NotImplementedError
+
+    @abstractmethod
+    def open_url(self, url: str) -> None:
+        """Открывает URL в браузере."""
+        raise NotImplementedError

@@ -1,14 +1,22 @@
 from gideon.core.event import Event
 from gideon.core.event_bus import EventBus
 from gideon.core.event_type import EventType
+
 from gideon.tools.executor import ToolExecutor
 from gideon.tools.registry import ToolRegistry
+
 from gideon.ai.factory import AIFactory
 from gideon.ai.manager import AIManager
-from gideon.core.agent import Agent
 from gideon.ai.context import ContextManager
+
+from gideon.core.agent import Agent
+
 from gideon.config.manager import ConfigManager
 from gideon.platforms.factory import PlatformFactory
+
+from gideon.tools.builtin.calculator import CalculatorTool
+from gideon.tools.builtin.open_url import OpenUrlTool
+
 
 class Gideon:
     """
@@ -24,12 +32,29 @@ class Gideon:
     ):
         self.memory = memory
         self.voice = voice
+
         self.config = config or ConfigManager(
             "config/config.json"
         )
 
+        # Platform
         self.platform = PlatformFactory.create()
 
+        # Events
+        self.event_bus = EventBus()
+
+        # Tools
+        self.tools = ToolRegistry()
+
+        self.tools.register(
+            CalculatorTool()
+        )
+
+        self.tools.register(
+            OpenUrlTool(self.platform)
+        )
+
+        # AI
         provider = self.config.get(
             "ai.provider",
             "mock",
@@ -47,21 +72,13 @@ class Gideon:
             )
         )
 
-        self.event_bus = EventBus()
-        self.tools = ToolRegistry()
-
-        from gideon.tools.builtin.calculator import CalculatorTool
-
-        self.tools.register(
-            CalculatorTool()
-        )
-
-
+        # Tool executor
         self.tool_executor = ToolExecutor(
             registry=self.tools,
             event_bus=self.event_bus,
         )
 
+        # Context
         self.context = ContextManager(
             system_prompt=(
                 "You are Gideon, a personal AI assistant. "
@@ -69,6 +86,7 @@ class Gideon:
             )
         )
 
+        # Agent
         self.agent = Agent(
             ai=self.ai,
             tool_registry=self.tools,

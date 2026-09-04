@@ -29,6 +29,17 @@ class Tool(ABC):
         """JSON Schema параметров инструмента."""
         raise NotImplementedError
 
+    def schema(self) -> dict[str, Any]:
+        """
+        Возвращает схему инструмента для AI.
+        """
+
+        return {
+            "name": self.name,
+            "description": self.description,
+            "parameters": self.parameters,
+        }
+
     @abstractmethod
     def execute(self, **kwargs: Any) -> Any:
         """Выполняет инструмент."""

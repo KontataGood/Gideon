@@ -26,3 +26,8 @@ class MacOSPlatform(Platform):
             ["pkill", "-x", process],
             capture_output=True,
         )
+
+    def open_url(self, url: str) -> None:
+        subprocess.Popen(
+            ["open", url]
+        )
