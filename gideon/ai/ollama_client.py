@@ -26,6 +26,10 @@ class OllamaClient(AIClient):
             tools=tools or [],
         )
 
+        print("\n=== OLLAMA RESPONSE ===")
+        print(response)
+        print("=======================\n")
+
         message = response["message"]
 
         if message.get("tool_calls"):
