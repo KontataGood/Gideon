@@ -18,6 +18,8 @@ from gideon.tools.builtin.calculator import CalculatorTool
 from gideon.tools.builtin.open_url import OpenUrlTool
 from gideon.tools.builtin.open_application import OpenApplicationTool
 
+from gideon.tools.builtin.process import ProcessTool
+
 class Gideon:
     """
     Центральный объект ассистента.
@@ -56,6 +58,10 @@ class Gideon:
 
         self.tools.register(
             OpenApplicationTool(self.platform)
+        )
+
+        self.tools.register(
+            ProcessTool(self.platform)
         )
 
         # AI
