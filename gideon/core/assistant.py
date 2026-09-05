@@ -16,7 +16,7 @@ from gideon.platforms.factory import PlatformFactory
 
 from gideon.tools.builtin.calculator import CalculatorTool
 from gideon.tools.builtin.open_url import OpenUrlTool
-
+from gideon.tools.builtin.open_application import OpenApplicationTool
 
 class Gideon:
     """
@@ -52,6 +52,10 @@ class Gideon:
 
         self.tools.register(
             OpenUrlTool(self.platform)
+        )
+
+        self.tools.register(
+            OpenApplicationTool(self.platform)
         )
 
         # AI
