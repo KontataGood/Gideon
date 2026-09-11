@@ -19,11 +19,14 @@ class OllamaClient(AIClient):
         self,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]] | None = None,
+        think: bool = False,
     ) -> str | ToolCall:
+
         response = self._client.chat(
             model=self._model,
             messages=messages,
             tools=tools or [],
+            think=think,
         )
 
         print("\n=== OLLAMA RESPONSE ===")

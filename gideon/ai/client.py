@@ -11,5 +11,6 @@ class AIClient(ABC):
         self,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]] | None = None,
+        think: bool = False,
     ) -> str | ToolCall:
         raise NotImplementedError
