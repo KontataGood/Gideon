@@ -10,6 +10,7 @@ from gideon.ai.manager import AIManager
 from gideon.ai.context import ContextManager
 
 from gideon.core.agent import Agent
+from gideon.core.request_router import RequestRouter
 
 from gideon.config.manager import ConfigManager
 from gideon.platforms.factory import PlatformFactory
@@ -44,6 +45,9 @@ class Gideon:
 
         # Events
         self.event_bus = EventBus()
+
+        # Request router
+        self.router = RequestRouter()
 
         # Tools
         self.tools = ToolRegistry()
@@ -102,6 +106,7 @@ class Gideon:
             tool_registry=self.tools,
             tool_executor=self.tool_executor,
             context=self.context,
+            router=self.router,
         )
 
         self._running = False

@@ -1,6 +1,5 @@
 from gideon.ai.client import AIClient
 from gideon.ai.ollama_client import OllamaClient
-from gideon.ai.openai_client import OpenAIClient
 
 
 class AIFactory:
@@ -15,17 +14,6 @@ class AIFactory:
 
         if provider == "ollama":
             return OllamaClient(model=model)
-
-        if provider == "openai":
-            if not api_key:
-                raise RuntimeError(
-                    "GIDEON_AI_API_KEY is not configured."
-                )
-
-            return OpenAIClient(
-                api_key=api_key,
-                model=model,
-            )
 
         raise ValueError(
             f"Unsupported AI provider: {provider}"

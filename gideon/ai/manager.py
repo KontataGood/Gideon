@@ -13,9 +13,11 @@ class AIManager:
         self,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]] | None = None,
+        think: bool = False,
     ) -> str | ToolCall:
 
         return self._client.chat(
             messages=messages,
             tools=tools,
+            think=think,
         )
