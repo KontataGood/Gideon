@@ -30,11 +30,16 @@ def main():
 
         except KeyboardInterrupt:
             print("\n")
-
             break
 
-        except Exception as e:
-            print(f"Error: {e}")
+
+
+
+        except Exception:
+
+            import traceback
+
+            traceback.print_exc()
 
     gideon.stop()
 

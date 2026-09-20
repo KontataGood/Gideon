@@ -26,30 +26,38 @@ class RequestRouter:
         text = text.strip()
 
         expression = self._extract_calculation(text)
-
         if expression is not None:
             return RouteResult(
                 type=RequestType.TOOL,
                 tool_name="calculator",
-                arguments={
-                    "expression": expression,
-                },
+                arguments={"expression": expression},
             )
 
-        return RouteResult(
-            type=RequestType.AI,
-        )
+        url = self._extract_url(text)
+        if url is not None:
+            return RouteResult(
+                type=RequestType.TOOL,
+                tool_name="open_url",
+                arguments={"url": url},
+            )
 
-    def _extract_calculation(
-        self,
-        text: str,
-    ) -> str | None:
+        application = self._extract_application(text)
+        if application is not None:
+            return RouteResult(
+                type=RequestType.TOOL,
+                tool_name="open_application",
+                arguments={"application": application},
+            )
+
+        return RouteResult(type=RequestType.AI)
+
+    def _extract_calculation(self, text: str) -> str | None:
         """
         Извлекает математическое выражение
         из простого запроса пользователя.
         """
 
-        normalized = text.lower().strip()
+        normalized = text.lower()
 
         prefixes = (
             "сколько будет ",
@@ -67,17 +75,56 @@ class RequestRouter:
 
         return None
 
-    def _looks_like_expression(
-        self,
-        expression: str,
-    ) -> bool:
+    def _extract_url(self, text: str) -> str | None:
         """
-        Проверяет, похожа ли строка на математическое выражение.
+        Извлекает URL из простой команды открытия сайта.
         """
 
-        allowed_characters = set(
-            "0123456789+-*/%.() "
+        normalized = text.lower()
+
+        prefixes = (
+            "открой ",
+            "open ",
         )
+
+        for prefix in prefixes:
+            if normalized.startswith(prefix):
+                url = text[len(prefix):].strip()
+
+                if url.startswith(("http://", "https://")):
+                    return url
+
+        return None
+
+    def _extract_application(self, text: str) -> str | None:
+        """
+        Извлекает название приложения
+        из простой команды запуска приложения.
+        """
+
+        normalized = text.lower()
+
+        prefixes = (
+            "открой приложение ",
+            "запусти приложение ",
+            "open application ",
+        )
+
+        for prefix in prefixes:
+            if normalized.startswith(prefix):
+                application = text[len(prefix):].strip()
+
+                if application:
+                    return application
+
+        return None
+
+    def _looks_like_expression(self, expression: str) -> bool:
+        """
+        Проверяет, является ли строка математическим выражением.
+        """
+
+        allowed_characters = set("0123456789+-*/%.() ")
 
         return (
             bool(expression)
@@ -85,8 +132,5 @@ class RequestRouter:
                 character in allowed_characters
                 for character in expression
             )
-            and any(
-                character.isdigit()
-                for character in expression
-            )
+            and any(character.isdigit() for character in expression)
         )
